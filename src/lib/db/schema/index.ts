@@ -4,3 +4,6 @@ export * from "./clients";
 export * from "./projects";
 export * from "./pipeline";
 export * from "./task-extras";
+export * from "./approvals";
+export * from "./ai-content";
+export * from "./subtasks";

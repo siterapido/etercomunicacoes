@@ -4,7 +4,19 @@ import { DragDropContext, Droppable, type DropResult } from "@hello-pangea/dnd";
 import { Loader2, RefreshCw } from "lucide-react";
 import { useTasks, type ColumnData } from "@/hooks/use-tasks";
 import { KanbanColumn } from "./kanban-column";
-import { useEffect } from "react";
+import { TaskDetailModal } from "./task-detail-modal";
+import { useEffect, useState } from "react";
+
+interface TaskData {
+  id: string;
+  title: string;
+  description?: string | null;
+  priority: string;
+  dueDate?: string | null;
+  position: number;
+  columnId: string;
+  createdBy?: string | null;
+}
 
 interface KanbanBoardProps {
   projectId: string;
@@ -21,6 +33,7 @@ export function KanbanBoard({ projectId, initialColumns }: KanbanBoardProps) {
     moveTask,
     refresh,
   } = useTasks(projectId);
+  const [selectedTask, setSelectedTask] = useState<TaskData | null>(null);
 
   // Use initial columns from server on first render
   useEffect(() => {
@@ -107,33 +120,41 @@ export function KanbanBoard({ projectId, initialColumns }: KanbanBoardProps) {
   }
 
   return (
-    <DragDropContext onDragEnd={handleDragEnd}>
-      <Droppable droppableId="board" type="COLUMN" direction="horizontal">
-        {(provided) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            className="flex gap-4 overflow-x-auto pb-4 h-[calc(100vh-220px)] scrollbar-hide"
-            style={{
-              scrollbarWidth: "none",
-              msOverflowStyle: "none",
-            }}
-          >
-            {columns.map((column) => (
-              <KanbanColumn
-                key={column.id}
-                columnId={column.id}
-                name={column.name}
-                color={column.color}
-                tasks={column.tasks}
-                projectId={projectId}
-                onCreateTask={handleCreateTask}
-              />
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
+    <>
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId="board" type="COLUMN" direction="horizontal">
+          {(provided) => (
+            <div
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              className="flex gap-4 overflow-x-auto pb-4 h-[calc(100vh-220px)] scrollbar-hide"
+              style={{
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+              }}
+            >
+              {columns.map((column) => (
+                <KanbanColumn
+                  key={column.id}
+                  columnId={column.id}
+                  name={column.name}
+                  color={column.color}
+                  tasks={column.tasks}
+                  projectId={projectId}
+                  onCreateTask={handleCreateTask}
+                  onTaskClick={(task) => setSelectedTask(task)}
+                />
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+
+      <TaskDetailModal
+        task={selectedTask}
+        onClose={() => setSelectedTask(null)}
+      />
+    </>
   );
 }

@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar, text, boolean, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, uuid, varchar, text, boolean, timestamp, jsonb } from "drizzle-orm/pg-core";
 import { userRoleEnum } from "./enums";
 
 export const users = pgTable("users", {
@@ -8,6 +8,17 @@ export const users = pgTable("users", {
   avatarUrl: text("avatar_url"),
   role: userRoleEnum("role").notNull().default("designer"),
   emailVerified: boolean("email_verified").notNull().default(false),
+  notificationPreferences: jsonb("notification_preferences").$type<{
+    emailOnApproval: boolean;
+    emailOnComment: boolean;
+    emailOnAssign: boolean;
+    emailOnDeadline: boolean;
+  }>().default({
+    emailOnApproval: true,
+    emailOnComment: true,
+    emailOnAssign: true,
+    emailOnDeadline: true,
+  }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });

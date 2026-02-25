@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth/session";
 import { createTask } from "@/lib/db/queries/tasks";
+import { hasPermission } from "@/lib/auth/rbac";
 
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession();
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    if (!hasPermission(session.user.role, "tasks", "create")) {
+      return NextResponse.json({ error: "Permissão negada" }, { status: 403 });
     }
 
     const body = await request.json();

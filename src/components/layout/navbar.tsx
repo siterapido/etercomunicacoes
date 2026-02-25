@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogOut, Settings, ChevronDown } from "lucide-react";
+import { LogOut, Settings, ChevronDown, Shield, Sparkles, CheckSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar } from "@/components/ui/avatar";
 import { signOut } from "@/lib/auth/client";
@@ -22,6 +22,8 @@ const navLinks = [
   { href: "/pipeline", label: "Pipeline" },
   { href: "/projects", label: "Projetos" },
   { href: "/clients", label: "Clientes" },
+  { href: "/approvals", label: "Aprovações" },
+  { href: "/ai", label: "AI Studio", isAI: true },
 ];
 
 export function Navbar({ user }: NavbarProps) {
@@ -56,18 +58,19 @@ export function Navbar({ user }: NavbarProps) {
         E T E R<span className="text-brass">.</span>
       </Link>
 
-      <div className="hidden md:flex items-center gap-8">
+      <div className="hidden md:flex items-center gap-6">
         {navLinks.map((link) => (
           <Link
             key={link.href}
             href={link.href}
             className={cn(
-              "text-stone no-underline text-[13px] font-medium tracking-[0.05em] transition-colors relative",
+              "text-stone no-underline text-[13px] font-medium tracking-[0.05em] transition-colors relative flex items-center gap-1",
               "after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-brass after:transition-[width] after:duration-300 after:rounded-full",
               "hover:text-marble hover:after:w-full",
               pathname === link.href && "text-brass font-semibold after:w-full"
             )}
           >
+            {link.isAI && <Sparkles className="h-3 w-3" />}
             {link.label}
           </Link>
         ))}
@@ -108,6 +111,27 @@ export function Navbar({ user }: NavbarProps) {
                     <Settings className="w-4 h-4" />
                     Configuracoes
                   </Link>
+                  {(user.role === "admin" || user.role === "manager") && (
+                    <Link
+                      href="/approvals"
+                      className="flex items-center gap-3 px-3 py-2 text-sm text-champagne hover:bg-teal-light rounded-md no-underline transition-colors"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      <CheckSquare className="w-4 h-4" />
+                      Aprovacoes
+                    </Link>
+                  )}
+                  {user.role === "admin" && (
+                    <Link
+                      href="/admin"
+                      className="flex items-center gap-3 px-3 py-2 text-sm text-champagne hover:bg-teal-light rounded-md no-underline transition-colors"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      <Shield className="w-4 h-4" />
+                      Admin
+                    </Link>
+                  )}
+                  <div className="my-1 border-t border-graphite" />
                   <button
                     onClick={handleSignOut}
                     className="flex items-center gap-3 px-3 py-2 text-sm text-champagne hover:bg-teal-light rounded-md w-full text-left transition-colors cursor-pointer"

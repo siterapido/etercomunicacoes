@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth/session";
 import { updateTask, deleteTask } from "@/lib/db/queries/tasks";
+import { hasPermission } from "@/lib/auth/rbac";
 
 export async function PATCH(
   request: NextRequest,
@@ -10,6 +11,10 @@ export async function PATCH(
     const session = await getServerSession();
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    if (!hasPermission(session.user.role, "tasks", "update")) {
+      return NextResponse.json({ error: "Permissão negada" }, { status: 403 });
     }
 
     const { id } = await params;
@@ -31,13 +36,17 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession();
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    if (!hasPermission(session.user.role, "tasks", "delete")) {
+      return NextResponse.json({ error: "Permissão negada" }, { status: 403 });
     }
 
     const { id } = await params;
