@@ -26,8 +26,6 @@ export default function LoginPage() {
         password,
       });
 
-      console.log("SIGN_IN_RESULT", JSON.stringify(result));
-
       if (result.error) {
         setError("Email ou senha incorretos.");
       } else {

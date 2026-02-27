@@ -15,7 +15,14 @@ export interface AppSession {
 }
 
 export async function getServerSession(): Promise<AppSession | null> {
-  const { data: session } = await auth.getSession();
+  let session: Awaited<ReturnType<typeof auth.getSession>>["data"] = null;
+
+  try {
+    const { data } = await auth.getSession();
+    session = data;
+  } catch {
+    return null;
+  }
 
   if (!session?.user) {
     return null;
