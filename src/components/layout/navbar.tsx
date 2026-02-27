@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { LogOut, Settings, ChevronDown, Shield, Sparkles, CheckSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -45,17 +46,22 @@ export function Navbar({ user }: NavbarProps) {
   return (
     <nav
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 px-6 md:px-10 py-4 flex items-center justify-between transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-50 px-6 md:px-10 py-3 flex items-center justify-between transition-all duration-300",
         scrolled
-          ? "bg-void/95 backdrop-blur-[20px] py-3 shadow-sm border-b border-brass/10"
-          : "bg-void border-b border-graphite"
+          ? "bg-[#1C2D3A]/95 backdrop-blur-xl shadow-lg border-b border-white/5"
+          : "bg-[#1C2D3A] border-b border-white/8"
       )}
     >
-      <Link
-        href="/"
-        className="font-[family-name:var(--font-display)] text-xl font-bold tracking-[0.3em] text-marble no-underline"
-      >
-        E T E R<span className="text-brass">.</span>
+      <Link href="/" className="no-underline flex items-center">
+        <Image
+          src="/logos/etercom-full.png"
+          alt="Eter Comunicações"
+          width={120}
+          height={74}
+          className="opacity-90 hover:opacity-100 transition-opacity"
+          style={{ height: "36px", width: "auto" }}
+          priority
+        />
       </Link>
 
       <div className="hidden md:flex items-center gap-6">
@@ -64,18 +70,18 @@ export function Navbar({ user }: NavbarProps) {
             key={link.href}
             href={link.href}
             className={cn(
-              "text-stone no-underline text-[13px] font-medium tracking-[0.05em] transition-colors relative flex items-center gap-1",
-              "after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-brass after:transition-[width] after:duration-300 after:rounded-full",
-              "hover:text-marble hover:after:w-full",
-              pathname === link.href && "text-brass font-semibold after:w-full"
+              "text-[#F5EAD4]/50 no-underline text-[12px] font-medium tracking-[0.12em] uppercase transition-colors relative flex items-center gap-1.5",
+              "after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[1.5px] after:bg-[#FF7700] after:transition-[width] after:duration-300 after:rounded-full",
+              "hover:text-[#F5EAD4] hover:after:w-full",
+              pathname === link.href && "text-[#F5EAD4] after:w-full"
             )}
           >
-            {link.isAI && <Sparkles className="h-3 w-3" />}
+            {link.isAI && <Sparkles className="h-3 w-3 text-[#FF7700]" />}
             {link.label}
           </Link>
         ))}
 
-        <div className="w-px h-6 bg-graphite" />
+        <div className="w-px h-5 bg-white/10" />
 
         <div className="relative">
           <button
@@ -85,7 +91,7 @@ export function Navbar({ user }: NavbarProps) {
             <Avatar name={user.name} imageUrl={user.avatarUrl} size="md" />
             <ChevronDown
               className={cn(
-                "w-3 h-3 text-stone transition-transform",
+                "w-3 h-3 text-[#F5EAD4]/40 transition-transform",
                 menuOpen && "rotate-180"
               )}
             />
@@ -97,7 +103,7 @@ export function Navbar({ user }: NavbarProps) {
                 className="fixed inset-0 z-40"
                 onClick={() => setMenuOpen(false)}
               />
-              <div className="absolute right-0 top-full mt-2 w-56 bg-void border border-graphite rounded-lg shadow-lg z-50 overflow-hidden">
+              <div className="absolute right-0 top-full mt-2 w-56 bg-void border border-graphite rounded-lg shadow-xl z-50 overflow-hidden">
                 <div className="p-4 border-b border-graphite">
                   <p className="text-sm font-medium text-marble">{user.name}</p>
                   <p className="text-xs text-stone capitalize">{user.role}</p>
