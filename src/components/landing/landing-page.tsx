@@ -227,8 +227,19 @@ function Navbar() {
 function HeroSection() {
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden bg-[#1C2D3A]">
+      {/* Background image - interior design architecture */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1920&q=85"
+          alt=""
+          className="w-full h-full object-cover"
+        />
+        {/* Blue overlay with transparency */}
+        <div className="absolute inset-0 bg-[#1C2D3A]/78" />
+      </div>
+
       {/* Geometric arcs */}
-      <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none z-[1]">
         <div className="absolute top-[10%] right-[-15%] w-[70vw] h-[70vw] rounded-full border border-[#467192]/20" />
         <div className="absolute bottom-[-25%] left-[-20%] w-[80vw] h-[80vw] rounded-full border border-[#467192]/12" />
         <div className="absolute top-[35%] left-[8%] w-[35vw] h-[35vw] rounded-full border border-[#467192]/8" />
@@ -241,9 +252,9 @@ function HeroSection() {
           style={{ animationDelay: "0.3s", animationFillMode: "both" }}
         >
           <img
-            src="/logos/etercom-full.png"
+            src="/logos/etercom-text.png"
             alt="Etercom Comunicação"
-            className="h-32 md:h-44 w-auto mx-auto"
+            className="h-44 md:h-64 w-auto mx-auto"
           />
         </div>
 
